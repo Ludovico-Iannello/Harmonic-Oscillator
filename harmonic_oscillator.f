@@ -1,6 +1,6 @@
 	program harmonic_oscillator
 
-	parameter (measures=2000000)
+	parameter (measures=1000000)
 	real t1,t2
 	real var_y2,var_Dy2,var_corr,lattice,y2,Dy2
 	real O_mean_1(measures)
@@ -10,9 +10,9 @@
 	common/arr/y2(measures),Dy2(measures)
 
 	call second(t1)
-	open(1, file='parameters',status="unknown")
+	open(1, file='parameters_varing_beta',status="unknown")
 	open(2,file='meas_out',status='unknown')
-	open(3,file='observables_all_paths',status='unknown')
+	open(3,file='observables_all_paths_varing_beta',status='unknown')
 	
 
 CC====================================
@@ -25,8 +25,11 @@ CC====================================
 	beta_omega=10
 	
 	do i=1,20
-		Npassi=i*10            
-		eta=beta_omega/Npassi	     !!valore del parametro eta = omega * a
+		!Npassi=i*10            
+		!eta=beta_omega/Npassi	     !!valore del parametro eta = omega * a
+		eta=0.1
+		beta_omega=i
+		Npassi=int(beta_omega/eta)
 		write(*,*) 'eta', eta
 		d_metro=2.0*sqrt(eta)        !!parametro del metropolis
 		
@@ -48,8 +51,8 @@ CC=====================================
  		call ranstart                     !! initialize random number generator
 
 		allocate(field(Npassi))
-		allocate(O_arr(int(Npassi/2)))
-		allocate(corr(measures,int(Npassi/2)))
+C		allocate(O_arr(int(Npassi/2)))
+C		allocate(corr(measures,int(Npassi/2)))
 		
 		CALL initialize_lattice(field,Npassi,iflag)    
 	
@@ -73,11 +76,11 @@ CC AGGIORNAMENTO CONFIGURAZIONE
 		     	
 	   		call measure(field,Npassi,obs1,obs2)
 	   		
-	   		call correlatore(field,Npassi,1,O_arr)
+C	   		call correlatore(field,Npassi,1,O_arr)
+C			corr(iter,:)=O_arr
 	   		
 	   		call mean_O_corr(field,Npassi,1,mean_1_path)
 	   		
-	   		corr(iter,:)=O_arr
 	   		
 	   		O_mean_1(iter)=mean_1_path
 	   		y2(iter)=obs1 !! array per fare le medie su tutti i cammini
@@ -90,15 +93,15 @@ CC CAlcolo media ed errore su tutti i cammini
 		Dy2_all_path=sum(Dy2)/float(measures)
 		
 		
-		open(i*10,status='unknown')
+C		open(i*10,status='unknown')
 		
 		
-		do iter = 1, int(Npassi/2)
-			media_corr=sum(corr(:,iter))
-			call bootstrap(corr(:,iter),var_corr)
-			write(i*10,*) iter, media_corr/float(measures), var_corr
-		enddo
-		
+C		do iter = 1, int(Npassi/2)
+C			media_corr=sum(corr(:,iter))
+C			call bootstrap(corr(:,iter),var_corr)
+C			write(i*10,*) iter, media_corr/float(measures), var_corr
+C		enddo
+C		close(i*10)		
 		
 		call bootstrap(y2,var_y2)
 		call bootstrap(Dy2,var_Dy2)
@@ -112,12 +115,14 @@ CC CAlcolo media ed errore su tutti i cammini
 		!! creo file fort.i*10 dove i*10 rappresenta N passi
 		!! riporto il valore della x del cammino
 
-		open(i*11,status='unknown')
-		write(i*11,*) field		
-		close(i*11)
+C		open(i*11,status='unknown')
+C		write(i*11,*) field		
+C		close(i*11)
 		deallocate(field)
-		deallocate(O_arr)
-		deallocate(corr)
+C		deallocate(O_arr)
+C		deallocate(corr)
+		call second(t2)
+		write(*,*)t2-t1
 	enddo
 
 CC=========TERMINE SIMULAZIONE MONTE-CARLO===========
@@ -284,7 +289,7 @@ c*****************************************************************
 C=================================================================
 	subroutine bootstrap(x,dx)
         integer j,q,i,N,l,k,p
-        parameter (k=5000,N=2000000,p=100)
+        parameter (k=5000,N=1000000,p=100)
         real dx,media_x
         real sim_arr(k)      		    !!media  simulazioni
         real a(N),x(N)        !!a array provvisorio
@@ -313,7 +318,7 @@ C=================================================================
 c=================================================================
       	subroutine best_delta()
         integer i,j,l,k,q,p,d
-        parameter (measures=2000000,k=1000,p=100)
+        parameter (measures=1000000,k=1000,p=100)
         real x,m,dm,u,dev,y2,Dy2
         real a(k)
         common/arr/y2(measures),Dy2(measures)
