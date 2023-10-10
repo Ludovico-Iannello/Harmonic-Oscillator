@@ -6,14 +6,15 @@ plt.rc('font',size=16)
 
 beta_omega=10.0
 
-x1=np.loadtxt('/home/ludovico/Harmonic-Oscillator/data_varing_eta/fort.11', unpack=False)
-x2=np.loadtxt('/home/ludovico/Harmonic-Oscillator/data_varing_eta/fort.66', unpack=False)
-x3=np.loadtxt('/home/ludovico/Harmonic-Oscillator/data_varing_eta/fort.220', unpack=False)
+x1=np.loadtxt(r'C:\Users\ludoi\OneDrive\Desktop\Harmonic-Oscillator\data_varing_eta_3/fort.11', unpack=False)
+x2=np.loadtxt(r'C:\Users\ludoi\OneDrive\Desktop\Harmonic-Oscillator\data_varing_eta_3/fort.66', unpack=False)
+x3=np.loadtxt(r'C:\Users\ludoi\OneDrive\Desktop\Harmonic-Oscillator\data_varing_eta_3/fort.220', unpack=False)
 
+print(x1)
 a=[beta_omega/(len(x1)-1),beta_omega/(len(x2)-1),beta_omega/(len(x3)-1)]
 
 n1=np.arange(0,len(x1))
-n2=np.arange(0,len(x2))         
+n2=np.arange(0,len(x2))
 n3=np.arange(0,len(x3))
 
 #path
@@ -38,7 +39,7 @@ def G(x, m):
     #Harmonic oscillator solution
     psi = (1/(np.pi)**(1/4))*(1/np.sqrt((2**m)*ssp.gamma(m+1)))*ssp.eval_hermite(m, x)*np.exp(-(x**2)/2)
     return psi
-    
+
 plt.figure(2,figsize=[10,8])
 x = np.linspace(-3,3, 10000)
 plt.hist(y, bins=1000, density=True)#, label=r'$\beta \omega$ = 20; $\eta$=0.1')
@@ -49,13 +50,13 @@ plt.tight_layout()
 '''
 
 
-
+'''
 
 #plot varing eta
 beta_omega=20.0
 def fit (x,a,b):
     return a+b*x**2#+c*x**3
-    
+
 y2,var_y2,Dy2,var_Dy2=np.loadtxt('/home/ludovico/Harmonic-Oscillator/data_varing_eta_8/observables_all_paths', unpack=True)
 
 eta=[]
@@ -183,5 +184,5 @@ plt.errorbar(xx,fit(1/xx,0),capsize=4)
 plt.xlabel(r'$\frac{    1}{\beta \omega}$')
 plt.tight_layout()
 
-
+'''
 plt.show()
