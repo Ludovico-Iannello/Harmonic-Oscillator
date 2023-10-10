@@ -28,13 +28,13 @@ plt.xlabel(r'$\omega\tau$ ')
 plt.ylabel('y ')
 plt.legend()
 plt.tight_layout()
-'''
+
 ## waves function
 path= np.loadtxt(r'/home/ludovico/Harmonic-Oscillator/meas_out')
 
 N=200
-#trasformo la matrice in un vettore dato che nono importa l'ordine
 y = np.reshape(path, N*10**6)
+
 def G(x, m):
     #Harmonic oscillator solution
     psi = (1/(np.pi)**(1/4))*(1/np.sqrt((2**m)*ssp.gamma(m+1)))*ssp.eval_hermite(m, x)*np.exp(-(x**2)/2)
@@ -47,10 +47,10 @@ plt.plot(x, abs(G(x, 0))**2,lw=2.5)
 plt.xlabel('y')
 plt.ylabel(r'$|\psi_0|^2$')
 plt.tight_layout()
-'''
 
 
-'''
+
+
 
 #plot varing eta
 beta_omega=20.0
@@ -184,5 +184,5 @@ plt.errorbar(xx,fit(1/xx,0),capsize=4)
 plt.xlabel(r'$\frac{    1}{\beta \omega}$')
 plt.tight_layout()
 
-'''
+
 plt.show()
